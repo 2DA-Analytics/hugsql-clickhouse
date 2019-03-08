@@ -10,9 +10,9 @@
   (let [metadata (.getMetaData results)
         column-count (.getColumnCount metadata)]
     (loop [columns (range 1 (inc column-count)) keys (transient [])]
-      (if (not (empty? columns))
-        (recur (rest columns) (conj! keys (func metadata (first columns))))
-        (persistent! keys)))))
+      (if (empty? columns)
+        (persistent! keys)
+        (recur (rest columns) (conj! keys (func metadata (first columns))))))))
 
 (def get-column-names
   (partial get-column-info (fn [metadata column]
@@ -23,22 +23,56 @@
                              (.getColumnTypeName metadata column))))
 
 (defn result->map
-  [keys result])
+  [keys result]
+  (reduce (fn [acc key]
+            (let [field (first key)
+                  field-type (keyword (second key))]
+              (assoc acc (keyword field) (.getObject result field))))
+          {}
+          keys))
 
 (defn process-result
   ""
   [result]
-  nil)
+  (let [names (get-column-names result)
+        type-names (get-column-type-names result)
+        keys (map vector names type-names)]
+    (result->map keys result)))
 
 (defn process-results
   ""
   [results]
-  nil)
+  (let [processed (transient [])]
+    (while (.next results)
+      (conj! processed (process-result results)))
+    (persistent! processed)))
+
+(defprotocol Stringer
+  (stringify
+   [obj]
+   (str obj)))
+
+(extend-protocol Stringer
+  java.lang.String
+  (stringify
+    [obj]
+    (str "'" obj "'"))
+  clojure.lang.Keyword
+  (stringify
+   [obj]
+   (name obj))
+  clojure.lang.PersistentVector
+  (stringify
+    [obj]
+    (clojure.string/replace (str obj) #" " ", ")))
 
 (defn sqlvec->query
   "Convert a sqlvec to a SQL string."
   [sqlvec]
-  nil)
+  (loop [query (clojure.string/replace (first sqlvec) #"\n" " ") vals (rest sqlvec)]
+    (if (not (empty? vals))
+      (recur (clojure.string/replace-first query #"\?" (stringify (first vals))) (rest vals))
+      query)))
 
 (deftype HugsqlAdapterClickhouseNativeJdbc []
   
@@ -57,10 +91,13 @@
           (.executeQuery query))))
 
   (result-one [this results options]
-    results)
+    (-> results
+        process-results
+        first))
 
   (result-many [this results options]
-    results)
+    (-> results
+        process-results))
 
   (result-affected [this results options]
     results)

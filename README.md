@@ -1,14 +1,14 @@
 # HugSQL Adapter ClickHouse Native JDBC
 
-An adapter between [HugSQL](https://www.hugsql.org/). and the [ClickHouse Native JDBC](https://github.com/housepower/ClickHouse-Native-JDBC) driver.
+[![Clojars Project](http://clojars.org/us.2da/hugsql-adapter-clickhouse-native-jdbc/latest-version.svg)](http://clojars.org/skinney/hugsql-adapter-postgres-async)
+
+An adapter between [HugSQL](https://www.hugsql.org/) and the [ClickHouse Native JDBC](https://github.com/housepower/ClickHouse-Native-JDBC) driver.
 
 ## Usage
 
 Follow the [HugSQL documentation](https://www.hugsql.org/#adapter-other) for using third-party adapters.
 
 Add the following to your `project.clj`:
-
-[![Clojars Project](http://clojars.org/skinney/hugsql-adapter-postgres-async/latest-version.svg)](http://clojars.org/skinney/hugsql-adapter-postgres-async)
 
 Then you have to install the adapter:
 
@@ -19,6 +19,13 @@ Then you have to install the adapter:
 
 (hugsql/def-db-fns "fns.sql")
 (hugsql/set-adapter! (clickhouse/hugsql-adapter-))
+```
+## Tests
+
+The tests assume you have a local instance of ClickHouse running on port 9000.
+
+```
+%> lein test
 ```
 
 ## License

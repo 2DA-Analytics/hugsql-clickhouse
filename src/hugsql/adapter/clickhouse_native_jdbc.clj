@@ -1,6 +1,7 @@
 (ns hugsql.adapter.clickhouse-native-jdbc
   "ClickHouse native JDBC adapter for HugSQL."
-  (:require [hugsql.adapter :as adapter])
+  (:require [clojure.string :as string]
+            [hugsql.adapter :as adapter])
   (:import (java.sql Connection DriverManager ResultSet Statement))
   (:gen-class))
 
@@ -15,32 +16,26 @@
         (recur (rest columns) (conj! keys (func metadata (first columns))))))))
 
 (def get-column-names
+  "Get column names for ClickHouse `results`."
   (partial get-column-info (fn [metadata column]
                              (.getColumnName metadata column))))
 
-(def get-column-type-names
-  (partial get-column-info (fn [metadata column]
-                             (.getColumnTypeName metadata column))))
-
 (defn result->map
+  "Turn a ClickHouse `result` into a map."
   [keys result]
-  (reduce (fn [acc key]
-            (let [field (first key)
-                  field-type (keyword (second key))]
-              (assoc acc (keyword field) (.getObject result field))))
+  (reduce (fn [acc key] (assoc acc (keyword key) (.getObject result key)))
           {}
           keys))
 
 (defn process-result
-  ""
+  "Process an individual ClickHouse `result`."
   [result]
-  (let [names (get-column-names result)
-        type-names (get-column-type-names result)
-        keys (map vector names type-names)]
-    (result->map keys result)))
+  (-> result
+      get-column-names
+      (result->map result)))
 
 (defn process-results
-  ""
+  "Process a list of ClickHouse `results`."
   [results]
   (let [processed (transient [])]
     (while (.next results)
@@ -48,9 +43,10 @@
     (persistent! processed)))
 
 (defprotocol Stringer
+  "Interface for converting instances of specific classes into strings."
   (stringify
-   [obj]
-   (str obj)))
+    [obj]
+    (str obj)))
 
 (extend-protocol Stringer
   java.lang.String
@@ -64,14 +60,14 @@
   clojure.lang.PersistentVector
   (stringify
     [obj]
-    (clojure.string/replace (str obj) #" " ", ")))
+    (string/replace (str obj) #" " ", ")))
 
 (defn sqlvec->query
-  "Convert a sqlvec to a SQL string."
+  "Convert a `sqlvec` to a SQL string."
   [sqlvec]
-  (loop [query (clojure.string/replace (first sqlvec) #"\n" " ") vals (rest sqlvec)]
+  (loop [query (string/replace (first sqlvec) #"\n" " ") vals (rest sqlvec)]
     (if (not (empty? vals))
-      (recur (clojure.string/replace-first query #"\?" (stringify (first vals))) (rest vals))
+      (recur (string/replace-first query #"\?" (stringify (first vals))) (rest vals))
       query)))
 
 (deftype HugsqlAdapterClickhouseNativeJdbc []

@@ -46,6 +46,11 @@ ALTER TABLE :tbl ADD COLUMN :col :typ
 -- :doc Select a color by id
 SELECT * FROM test.colors WHERE id = :id LIMIT 1
 
+-- :name select-all-colors :? :*
+-- :command :query
+-- :doc Select all colors
+SELECT * FROM test.colors
+
 -- :name drop-test-database
 -- :command :execute
 -- :result :raw

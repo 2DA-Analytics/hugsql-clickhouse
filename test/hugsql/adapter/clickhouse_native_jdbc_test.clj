@@ -24,9 +24,14 @@
 (deftest insert-row-test
   (testing "Can insert a row."
     (is (nil? (insert-color conn {:id "ocher" :rgb [204 119 34]}))))
-  (testing "Can select a row"
+  (testing "Can insert another row."
+    (is (nil? (insert-color conn {:id "crimson" :rgb [220, 20, 60]}))))
+  (testing "Can select a row."
     (is (= (:id (select-color-by-id conn {:id "ocher"}))
-           "ocher"))))
+           "ocher")))
+  (testing "Can select multiple rows."
+    (is (= (count (select-all-colors conn))
+           2))))
 
 (deftest add-column-test
   (testing "Can add a column to an existing table."

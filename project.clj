@@ -1,4 +1,4 @@
-(defproject us.2da/hugsql-adapter-clickhouse-native-jdbc "0.1.1"
+(defproject us.2da/hugsql-adapter-clickhouse-native-jdbc "0.1.2"
   :description "ClickHouse native JDBC adapter for HugSQL."
   :url "https://github.com/2DA-Analytics/hugsql-adapter-clickhouse-native-jdbc"
   :license {:name "Apache License, Version 2.0"

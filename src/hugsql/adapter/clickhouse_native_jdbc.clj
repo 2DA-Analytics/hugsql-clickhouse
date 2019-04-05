@@ -42,32 +42,40 @@
       (conj! processed (process-result results)))
     (persistent! processed)))
 
-(defprotocol Stringer
-  "Interface for converting instances of specific classes into strings."
-  (stringify
-    [obj]
-    (str obj)))
+(defn ascertain-object-type
+  "Return the appropriate type for the object for stringifying it."
+  [obj]
+  (cond (number? obj)
+        :number
+        (= "class clojure.lang.Keyword" (str (class obj)))
+        :keyword
+        (= "class java.lang.String" (str (class obj)))
+        :string
+        (= "class clojure.lang.PersistentVector" (str (class obj)))
+        :persistent-vector))
 
-(extend-protocol Stringer
-  java.lang.String
-  (stringify
-    [obj]
-    (str "'" obj "'"))
-  clojure.lang.Keyword
-  (stringify
-   [obj]
-   (name obj))
-  clojure.lang.PersistentVector
-  (stringify
-    [obj]
-    (string/replace (str obj) #" " ", ")))
+(defmulti object->string
+  "Convert an object into a string representation for ClickHouse."
+  ascertain-object-type)
+
+(defmethod object->string :number [obj]
+  (str obj))
+
+(defmethod object->string :keyword [obj]
+  (name obj))
+
+(defmethod object->string :string [obj]
+  (str "'" obj "'"))
+
+(defmethod object->string :persistent-vector [obj]
+  (string/replace (str obj) #" " ", "))
 
 (defn sqlvec->query
   "Convert a `sqlvec` to a SQL string."
   [sqlvec]
   (loop [query (string/replace (first sqlvec) #"\n" " ") vals (rest sqlvec)]
     (if (not (empty? vals))
-      (recur (string/replace-first query #"\?" (stringify (first vals))) (rest vals))
+      (recur (string/replace-first query #"\?" (object->string (first vals))) (rest vals))
       query)))
 
 (deftype HugsqlAdapterClickhouseNativeJdbc []

@@ -13,7 +13,8 @@ CREATE DATABASE IF NOT EXISTS test
 -- :doc Create a test table of colors
 CREATE TABLE IF NOT EXISTS test.colors
 (
-  `id` String,
+  `id` UInt8,
+  `name` String,
   `rgb` Array(UInt8)
 )
 ENGINE = MergeTree

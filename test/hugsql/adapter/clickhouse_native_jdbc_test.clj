@@ -23,9 +23,9 @@
 
 (deftest insert-row-test
   (testing "Can insert a row."
-    (is (nil? (insert-color conn {:id 123 :name "ocher" :rgb [204 119 34]}))))
+    (is (nil? (insert-color conn {:id 123 :name "ocher" :rgb [204 119 34] :intensity "high"}))))
   (testing "Can insert another row."
-    (is (nil? (insert-color conn {:id 456 :name "crimson" :rgb [220, 20, 60]}))))
+    (is (nil? (insert-color conn {:id 456 :name "crimson" :rgb [220, 20, 60] :intensity "low"}))))
   (testing "Can select a row."
     (is (= (:id (select-color-by-id conn {:id 123}))
            123)))

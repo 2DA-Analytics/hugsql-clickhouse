@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## 0.1.3 - 2019-04-12
+## Added
+- Unpack ClickHouseArrays
+
+## 0.1.2 - 2019-04-05
+## Added
+- Support for numerics
+
 ## 0.1.1 - 2019-03-21
 ### Added
 - Docstrings and updated README.

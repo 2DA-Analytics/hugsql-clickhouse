@@ -23,7 +23,12 @@
 (defn result->map
   "Turn a ClickHouse `result` into a map."
   [keys result]
-  (reduce (fn [acc key] (assoc acc (keyword key) (.getObject result key)))
+  (reduce (fn [acc key]
+            (let [array? (instance? com.github.housepower.jdbc.ClickHouseArray (.getObject result key))]
+              (cond array?
+                    (assoc acc (keyword key) (vec (.getArray (.getObject result key))))
+                    :else
+                    (assoc acc (keyword key) (.getObject result key)))))
           {}
           keys))
 

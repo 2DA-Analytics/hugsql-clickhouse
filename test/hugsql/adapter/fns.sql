@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS test.colors
 (
   `id` UInt8,
   `name` String,
-  `rgb` Array(UInt8)
+  `rgb` Array(UInt8),
+  `intensity` Enum8('high' = 0, 'low' = 1)
 )
 ENGINE = MergeTree
 PARTITION BY (`id`)

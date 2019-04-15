@@ -73,7 +73,10 @@
   (str "'" obj "'"))
 
 (defmethod object->string :persistent-vector [obj]
-  (string/replace (str obj) #" " ", "))
+  (-> (vec (map object->string obj))
+       str 
+       (string/replace #"\"" "") 
+       (string/replace #" " ", ")))
 
 (defn sqlvec->query
   "Convert a `sqlvec` to a SQL string."

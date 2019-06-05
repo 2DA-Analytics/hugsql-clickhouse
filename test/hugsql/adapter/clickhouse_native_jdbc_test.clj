@@ -22,8 +22,8 @@
 (defn database
   [tests]
   (create-test-database conn)
-  (tests)
-  (drop-test-database conn))
+  (tests))
+  ;(drop-test-database conn))
 
 (use-fixtures :once database)
 
@@ -33,11 +33,9 @@
 
 (deftest insert-row-test
   (testing "Can insert a row."
-    (is (nil? (insert-color conn {:ks (map name (keys ocher))
-                                  :vs (vals ocher)}))))
+    (is (nil? (insert-color conn {:id 123 :name "ocher" :rgb [204 119 34] :intensity "high" :brightness ["super" "bright"]}))))
   (testing "Can insert another row."
-    (is (nil? (insert-color conn {:ks (map name (keys crimson))
-                                  :vs (vals crimson)}))))
+    (is (nil? (insert-color conn {:id 456 :name "crimson" :rgb [220, 20, 60] :intensity "low" :brightness ["dull"]}))))
   (testing "Can select a row."
     (is (= (:id (select-color-by-id conn {:id 1}))
            1)))

@@ -47,33 +47,22 @@
       (conj! processed (process-result results)))
     (persistent! processed)))
 
-(defn ascertain-object-type
-  "Return the appropriate type for the object for stringifying it."
-  [obj]
-  (cond (number? obj)
-        :number
-        (= "class clojure.lang.Keyword" (str (class obj)))
-        :keyword
-        (= "class java.lang.String" (str (class obj)))
-        :string
-        (= "class clojure.lang.PersistentVector" (str (class obj)))
-        :persistent-vector))
+(defprotocol Type
+  (object->string [this]))
 
-(defmulti object->string
-  "Convert an object into a string representation for ClickHouse."
-  ascertain-object-type)
-
-(defmethod object->string :number [obj]
-  (str obj))
-
-(defmethod object->string :keyword [obj]
-  (name obj))
-
-(defmethod object->string :string [obj]
-  (str "'" obj "'"))
-
-(defmethod object->string :persistent-vector [obj]
-  (string/replace (str obj) #" " ", "))
+(extend-protocol Type
+  clojure.lang.Keyword
+  (object->string [obj] (name obj))
+  clojure.lang.PersistentVector
+  (object->string [obj] (string/replace (str obj) #" " ", "))
+  java.lang.Double
+  (object->string [obj] (str obj))
+  java.lang.Float
+  (object->string [obj] (str obj))
+  java.lang.Long
+  (object->string [obj] (str obj))
+  java.lang.String
+  (object->string [obj] (str "'" obj "'")))
 
 (defn sqlvec->query
   "Convert a `sqlvec` to a SQL string."

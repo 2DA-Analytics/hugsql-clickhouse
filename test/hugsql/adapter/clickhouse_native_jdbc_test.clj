@@ -24,8 +24,8 @@
 (defn database
   [tests]
   (create-test-database conn)
-  (tests))
-  ;(drop-test-database conn))
+  (tests)
+  (drop-test-database conn))
 
 (use-fixtures :once database)
 

@@ -12,18 +12,20 @@
 (def ocher {:id 1
             :name "ocher"
             :intensity "high"
+            :synonyms ["yellow" "brown"]
             :cmyk [[1.0 0.0 0.0 0.0]]})
 
 (def crimson {:id 1
               :name "crimson"
               :intensity "high"
+              :synonyms ["maroon"]
               :cmyk [[0.1 0.2 0.3 0.4]]})
 
 (defn database
   [tests]
   (create-test-database conn)
-  (tests)
-  (drop-test-database conn))
+  (tests))
+  ;(drop-test-database conn))
 
 (use-fixtures :once database)
 

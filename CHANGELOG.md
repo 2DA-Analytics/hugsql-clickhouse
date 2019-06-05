@@ -1,6 +1,16 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## 0.1.5 - 2019-06-05
+## Fixed
+- Bug where arrays of numbers weren't working
+## Changed
+- Using defprotocol instead of defmulti to use type in object->string conversion
+
+## 0.1.4 - 2019-04-15
+## Added
+- Add ability to have persistent vector strings
+
 ## 0.1.3 - 2019-04-12
 ## Added
 - Unpack ClickHouseArrays
@@ -20,5 +30,5 @@ All notable changes to this project will be documented in this file. This change
 ### Added
 - Initial release.
 
-[Unreleased]: https://github.com/2DA-Analytics/compare/0.1.1...HEAD
-[0.1.1]: https://github.com/your-name/hugsql-adapter-clickhouse-native-jdbc/compare/0.1.0...0.1.1
+[Unreleased]: https://github.com/2DA-Analytics/compare/0.1.5...HEAD
+[0.1.5]: https://github.com/2DA-Analytics/hugsql-adapter-clickhouse-native-jdbc/compare/0.1.4...0.1.5

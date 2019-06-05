@@ -54,7 +54,10 @@
   clojure.lang.Keyword
   (object->string [obj] (name obj))
   clojure.lang.PersistentVector
-  (object->string [obj] (string/replace (str obj) #" " ", "))
+  (object->string [obj] (-> (vec (map object->string obj))
+                            str
+                            (string/replace #"\"" "") 
+                            (string/replace #"([^,]) " "$1, ")))
   java.lang.Double
   (object->string [obj] (str obj))
   java.lang.Float

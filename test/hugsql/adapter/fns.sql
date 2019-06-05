@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS test.colors
   `name` String,
   `rgb` Array(UInt8),
   `intensity` Enum8('high' = 0, 'low' = 1),
+  `synonyms` Array(String),
   `cmyk` Array(Array(Float64))
 )
 ENGINE = MergeTree

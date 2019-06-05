@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS test.colors
   `id` UInt8,
   `name` String,
   `rgb` Array(UInt8),
-  `intensity` Enum8('high' = 0, 'low' = 1)
+  `intensity` Enum8('high' = 0, 'low' = 1),
+  `cmyk` Array(Array(Float64))
 )
 ENGINE = MergeTree
 PARTITION BY (`id`)
@@ -24,12 +25,12 @@ ORDER BY (`id`)
 PRIMARY KEY (`id`)
 SETTINGS index_granularity=8192
 
--- :name insert-color
+-- :name insert-color :!
 -- :command :execute
 -- :result :raw
 -- :doc Insert a color into the colors table
-INSERT INTO test.colors (id, rgb)
-VALUES (:id, :rgb)
+INSERT INTO test.colors (:i*:ks)
+VALUES (:v*:vs)
 
 -- :name delete-color-by-id
 -- :command :execute

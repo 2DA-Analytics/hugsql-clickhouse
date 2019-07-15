@@ -5,6 +5,7 @@ pipeline {
   stages {
     stage("install") {
       steps {
+        sh "apt-get install -y tzdata"
         sh "echo 'US/Chicago' | tee /etc/timezone"
         sh "dpkg-reconfigure --frontend noninteractive tzdata"
         sh "apt-get install -y dirmngr"

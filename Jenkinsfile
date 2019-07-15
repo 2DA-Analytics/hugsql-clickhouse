@@ -5,6 +5,8 @@ pipeline {
   stages {
     stage("install") {
       steps {
+        sh "echo 'US/Chicago' | tee /etc/timezone"
+        sh "dpkg-reconfigure --frontend noninteractive tzdata"
         sh "apt-get install -y dirmngr"
         sh "apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4"
         sh "echo 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/' | tee /etc/apt/sources.list.d/clickhouse.list"

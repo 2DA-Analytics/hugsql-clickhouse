@@ -53,17 +53,13 @@
 (extend-protocol Type
   clojure.lang.Keyword
   (object->string [obj] (name obj))
+  java.lang.Object
+  (object->string [obj] (str obj))
   clojure.lang.PersistentVector
   (object->string [obj] (-> (vec (map object->string obj))
                             str
-                            (string/replace #"\"" "") 
+                            (string/replace #"\"" "")
                             (string/replace #"([^,]) " "$1, ")))
-  java.lang.Double
-  (object->string [obj] (str obj))
-  java.lang.Float
-  (object->string [obj] (str obj))
-  java.lang.Long
-  (object->string [obj] (str obj))
   java.lang.String
   (object->string [obj] (str "'" obj "'")))
 
@@ -71,25 +67,25 @@
   "Convert a `sqlvec` to a SQL string."
   [sqlvec]
   (loop [query (string/replace (first sqlvec) #"\n" " ") vals (rest sqlvec)]
-    (if (not (empty? vals))
+    (if (seq vals)
       (recur (string/replace-first query #"\?" (object->string (first vals))) (rest vals))
       query)))
 
 (deftype HugsqlAdapterClickhouseNativeJdbc []
-  
+
   adapter/HugsqlAdapter
-  
+
   (execute [this db sqlvec options]
     (let [query (sqlvec->query sqlvec)]
       (-> db
-          .createStatement
-          (.executeQuery query))))
+          (.prepareStatement query)
+          (.execute))))
 
   (query [this db sqlvec options]
     (let [query (sqlvec->query sqlvec)]
       (-> db
-          .createStatement
-          (.executeQuery query))))
+          (.prepareStatement query)
+          (.executeQuery))))
 
   (result-one [this results options]
     (-> results
@@ -97,8 +93,7 @@
         first))
 
   (result-many [this results options]
-    (-> results
-        process-results))
+    (process-results results))
 
   (result-affected [this results options]
     results)

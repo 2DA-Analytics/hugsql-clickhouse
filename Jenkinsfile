@@ -7,7 +7,7 @@ pipeline {
       steps {
         sh "apt-get install -y dirmngr"
         sh "apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4"
-        sh "echo 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/' | sudo tee /etc/apt/sources.list.d/clickhouse.list"
+        sh "echo 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/' | tee /etc/apt/sources.list.d/clickhouse.list"
         sh "apt-get update"
         sh "apt-get install -y clickhouse-server"
         sh "service clickhouse-server start"

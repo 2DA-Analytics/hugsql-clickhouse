@@ -35,8 +35,11 @@ pipeline {
     }
   }
   post {
+    failure {
+      slackSend color: "warning", message: "${env.JOB_NAME} failed to build: (<${env.BUILD_URL}|Open>)."
+    }
     success {
-      slackSend color: 'good', message: 'hugsql-clickhouse successfully built.'
+      slackSend color: "good", message: "${env.JOB_NAME} successfully built: (<${env.BUILD_URL}|Open>)."
     }
   }
 }

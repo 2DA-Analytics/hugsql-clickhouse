@@ -25,7 +25,7 @@ Then you have to install the adapter:
 The tests assume you have a local instance of ClickHouse running on port 9000.
 
 ```
-%> lein test
+%> boot bat-test -c
 ```
 
 ## License

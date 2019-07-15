@@ -1,5 +1,8 @@
 # Change Log
-All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
+
+## [1.0.0][1.0.0] - 2019-07-15
+## Changed
+- Using [Hikari][hikari] connection pool instead of individual JDBC connection.
 
 ## [0.1.6][0.1.6] - 2019-07-15
 ## Changed
@@ -41,5 +44,7 @@ All notable changes to this project will be documented in this file. This change
 [0.1.4]: https://github.com/2DA-Analytics/hugsql-clickhouse/compare/0.1.3...0.1.4
 [0.1.5]: https://github.com/2DA-Analytics/hugsql-clickhouse/compare/0.1.4...0.1.5
 [0.1.6]: https://github.com/2DA-Analytics/hugsql-clickhouse/compare/0.1.5...0.1.6
+[1.0.0]: https://github.com/2DA-Analytics/hugsql-clickhouse/compare/0.1.6...1.0.0
 
 [boot]: https://github.com/boot-clj
+[hikari]: https://github.com/brettwooldridge/HikariCP

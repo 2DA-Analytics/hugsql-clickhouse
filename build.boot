@@ -5,10 +5,11 @@
       :license {"Apache License, Version 2.0" "http://www.apache.org/licenses/LICENSE-2.0.html"}
       :scm {:url "http://github.com/2DA-Analytics/hugsql-adapter-clickhouse-native-jdbc"}
       :url "http://github.com/2DA-Analytics/hugsql-adapter-clickhouse-native-jdbc"
-      :version "1.0.0"})
+      :version "1.0.1"})
 
 (set-env!
  :source-paths #{"src" "test"}
+ :resource-paths #{"src"}
  :dependencies '[[org.clojure/clojure "1.10.1"]
                  [com.github.housepower/clickhouse-native-jdbc "1.7-stable"]
                  [com.layerware/hugsql "0.4.9"]
